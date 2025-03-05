@@ -1,0 +1,13 @@
+{
+  "productCode": "120",
+  "amount": {
+    "unit": "ITEM",
+    "value": 25
+  },
+  "price": {
+    "perUnit": "ITEM",
+    "currency": "RUB",
+    "value": 105
+  },
+  "appliedAt": "2025-03-01T12:33:55"
+}

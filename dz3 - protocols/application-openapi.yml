@@ -1,0 +1,192 @@
+openapi: 3.0.0
+info:
+  title: Applications API
+  description: API для работы с заявками
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+
+paths:
+  /applications:
+    post:
+      summary: Создание заявки
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationRequest"
+      responses:
+        "201":
+          description: Заявка успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationResponse"
+
+    get:
+      summary: Фильтрация заявок
+      parameters:
+        - name: appliedFrom
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Дата начала фильтрации
+        - name: appliedTo
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Дата окончания фильтрации
+        - name: status
+          in: query
+          schema:
+            type: string
+          description: Статус заявки
+      responses:
+        "200":
+          description: Список заявок
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApplicationResponse"
+
+  /applications/search:
+    get:
+      summary: Поиск заявок
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+          description: Поисковый запрос
+      responses:
+        "200":
+          description: Результаты поиска
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApplicationResponse"
+
+  /applications/{id}:
+    get:
+      summary: Получение заявки по ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Данные заявки
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationResponse"
+
+  /applications/{id}/cancel:
+    post:
+      summary: Отмена заявки
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelRequest"
+      responses:
+        "200":
+          description: Заявка отменена
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApplicationResponse"
+
+components:
+  schemas:
+    ApplicationRequest:
+      type: object
+      required:
+        - productCode
+        - amount
+        - price
+        - appliedAt
+      properties:
+        productCode:
+          type: string
+        amount:
+          type: object
+          properties:
+            unit:
+              type: string
+            value:
+              type: integer
+        price:
+          type: object
+          properties:
+            perUnit:
+              type: string
+            currency:
+              type: string
+            value:
+              type: number
+        appliedAt:
+          type: string
+          format: date-time
+
+    ApplicationResponse:
+      type: object
+      properties:
+        applicationId:
+          type: string
+        processedAt:
+          type: string
+          format: date-time
+        processedBy:
+          type: object
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+
+    CancelRequest:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+        status:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time

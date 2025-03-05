@@ -1,0 +1,12 @@
+{
+  "errorCode": "NOT_IN_STOCK",
+  "message": "Only 1 item in stock",
+  "errors": [
+    {
+      "field": "amount",
+      "message": "Impossible amount"
+    }
+  ],
+  "status": 400,
+  "timeStamp": "2025-03-01T12:33:55Z"
+}

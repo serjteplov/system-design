@@ -1,0 +1,18 @@
+{
+  "applicationId": "cd89343e-7d81-4a72-af51-ca6cf5969146",
+  "productCode": "120",
+  "amount": {
+    "unit": "ITEMS",
+    "value": 25
+  },
+  "price": {
+    "unit": "PER_ITEM",
+    "currency": "RUB",
+    "value": 105
+  },
+  "appliedAt": "2025-03-01T12:33:55",
+  "processedAt": "2025-03-01T12:33:56",
+  "processedBy": {
+    "userId": "138900"
+  }
+}
