@@ -1,0 +1,26 @@
+[
+  {
+    "publicationId": "",
+    "authorId": "",
+    "text": "",
+    "createdAt": "",
+    "latestComments": []
+  }
+,
+  {
+    "_id": "pub_123",
+    "authorId": "user_1",
+    "content": "Моя публикация",
+    "latestComments": [],
+    "followers": ["follower1","follower2","follower3"],
+    "createdAt": "2025-03-01T13:00:00Z"
+  }
+,
+  {
+    "_id": "comm_1",
+    "publicationId": "pub_123",
+    "authorId": "user_2",
+    "text": "Комментарий отдельно!",
+    "createdAt": "2025-03-01T13:05:00Z"
+  }
+]
