@@ -66,7 +66,7 @@
 	*** где нужна strong consistency
 
 # 2. Архитектурное проектирование
-dz7 - final project/98edc09f4e56fcffbfc79dcb9339bfc1.jpg
+https://github.com/serjteplov/system-design/blob/37d3310e5110eb2b1a5dac86a29e275ee85bd969/dz7%20-%20final%20project/98edc09f4e56fcffbfc79dcb9339bfc1.jpg
 
 # 3. Выбор технологий
 # 4. Реализация нефункциональных требований
