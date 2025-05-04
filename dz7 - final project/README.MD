@@ -70,7 +70,7 @@
 ![Архитектура](https://github.com/serjteplov/system-design/blob/37d3310e5110eb2b1a5dac86a29e275ee85bd969/dz7%20-%20final%20project/98edc09f4e56fcffbfc79dcb9339bfc1.jpg)
 
 Деплоймент диаграмма
-
+![Развертывание](https://github.com/serjteplov/system-design/blob/d0b7f1bd7ed34e2033ca7566e36c207085374b4c/dz7%20-%20final%20project/dep.jpg)
 
 # 3. Выбор технологий
 # 4. Реализация нефункциональных требований
