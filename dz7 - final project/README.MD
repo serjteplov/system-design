@@ -76,7 +76,35 @@
 
 # 4. Выбор технологий
 
-tbd
+Geo DNS
+
+Load Balancer - F5
+
+Auth Server - Keycloak
+
+LDAP - ???????????
+
+WAF - ????????????
+
+API Gateway - ??????????
+
+S3 - minio
+
+Наблюдаемость: Micrometer, Prometheus, Grafana, Fluent Bit, Elasticsearch, Greylog, Jaeger, OpenTelemetry
+
+ЯП - Kotlin
+
+Виртуализация - Docker
+
+Контейнеризация - Kubernetes
+
+Ingress controller - NGINX
+
+БД - MongoDB, Mongos
+
+Async messaging - Kafka
+
+Front - React, Kotlin
 
 # 5. Реализация нефункциональных требований
 
