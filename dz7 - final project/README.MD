@@ -56,7 +56,7 @@
 # 3. Архитектура системы
 
 ### Архитектура системы
-![Архитектура](https://github.com/serjteplov/system-design/blob/205eaffe1272381838ddc8788ca3f5a688e5cfac/dz7%20-%20final%20project/arch.jpg)
+![Архитектура](https://github.com/serjteplov/system-design/blob/a065b27d0091f3f5187843cb881511b32014ea95/dz7%20-%20final%20project/arch.jpg)
 
 ### Деплоймент диаграмма
 ![Развертывание](https://github.com/serjteplov/system-design/blob/5e495cb6f1ee95aff7ac2c6b11e54f3ea0916b90/dz7%20-%20final%20project/dep.jpg)
