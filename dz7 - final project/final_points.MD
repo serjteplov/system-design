@@ -24,6 +24,7 @@ GeoDNS, health checks, 3 ЦОД, BigIP?, CDN, LB F5->WAF->API GW, сетевые
 Kubernetes, worker ноды, ingress, service discovery, balancing, secret, хранение секретов, Vault, ambassador
 
 Консистентность, время актуализации, время архивирования
+
 ---
 2 Требования и анализ.
 3 Шаблоны проектирования. MVC, CQRS, Event Sourcing, Saga, оркестрация хореография
