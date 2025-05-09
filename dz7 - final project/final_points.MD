@@ -25,6 +25,8 @@ Kubernetes, worker ноды, ingress, service discovery, balancing, secret, хр
 
 Консистентность, время актуализации, время архивирования
 
+Тэгирование S3, объём S3 1450 TB
+
 ---
 2 Требования и анализ.
 
