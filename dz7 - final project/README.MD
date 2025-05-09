@@ -55,10 +55,10 @@
 # 3. Проект архитектуры
 
 ### Архитектурная схема
-![Архитектура](https://github.com/serjteplov/system-design/blob/ad72ec611a4f692f6a27c37a4301d3f413f83a1a/dz7%20-%20final%20project/arch.jpg)
+![Архитектура](https://github.com/serjteplov/system-design/blob/40eb2cba62596c1bf252b2e26e832a32d203279b/dz7%20-%20final%20project/arch.jpg)
 
 ### Деплоймент диаграмма
-![Развертывание](https://github.com/serjteplov/system-design/blob/5e495cb6f1ee95aff7ac2c6b11e54f3ea0916b90/dz7%20-%20final%20project/dep.jpg)
+![Развертывание](https://github.com/serjteplov/system-design/blob/40eb2cba62596c1bf252b2e26e832a32d203279b/dz7%20-%20final%20project/dep.jpg)
 
 ### Предложенные решения
 1. Сделать 3 кластера в разных географически распределенных регионах страны. Использование паттерна георезервирование дает плюсы к производительности и отказоустойчивости. Балансирока между ЦОДами делается на уровне Geo DNS.
