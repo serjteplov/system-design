@@ -1,9 +1,9 @@
 
 Шарды, шардирование для write, доступ к шардам из приложений, решардинг, ключ шардирования, шарды mongo vs cassandra, replica set, mongos, кросс шардовые запросы, replica set по всем цодам, запросы на чтение, репликация данных между primary шардами, CDC, upsert, oplog mongo, index
 
-RTO, RPO, graceful degradation, backup, защита от шифровальщиков
+RTO, RPO, graceful degradation(отказ search-service, отказ SSE, отказ монго), backup, защита от шифровальщиков (air-gap бэкапы, immutable хранилища бэкапов)
 
-Архивация, доступ к архивным данным, чистка шардов, скорость получения заявки из batch json в холодном хранилище, S3 kafka sink, репликация minio, distributed режим minio, Тэгирование S3, объём S3 1450 TB
+Архивация, доступ к архивным данным, чистка шардов, скорость получения заявки из batch json в холодном хранилище (индексы хранить в Elastic search, данные в S3 раскидать по папкам "месяц" или "день"), S3 kafka sink, репликация minio, distributed режим minio (репликация внутри кластера) и bucket replication (репликация между кластерами), тэгирование S3 (не поможет для быстрого поиска в архиве), объём S3 1450 TB
 
 API Gateway, rate limiting, circuit breaker, throughput, кросс-функциональности, вендоры API Gateway
 
