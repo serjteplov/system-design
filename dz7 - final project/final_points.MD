@@ -3,7 +3,7 @@
 
 RTO, RPO, graceful degradation, backup, защита от шифровальщиков
 
-Архивация, доступ к архивным данным, чистка шардов, скорость получения заявки из batch json в холодном хранилище, S3 kafka sink, репликация minio, distributed режим minio
+Архивация, доступ к архивным данным, чистка шардов, скорость получения заявки из batch json в холодном хранилище, S3 kafka sink, репликация minio, distributed режим minio, Тэгирование S3, объём S3 1450 TB
 
 API Gateway, rate limiting, circuit breaker, throughput, кросс-функциональности, вендоры API Gateway
 
@@ -26,7 +26,7 @@ Kubernetes, worker ноды, ingress, service discovery, balancing, secret, хр
 Консистентность, время актуализации, время архивирования
 
 
-Тэгирование S3, объём S3 1450 TB
+
 
 ---
 2 Требования и анализ.
