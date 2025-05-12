@@ -5,9 +5,9 @@ RTO, RPO, graceful degradation(отказ search-service, отказ SSE, отк
 
 Архивация, доступ к архивным данным, чистка шардов, скорость получения заявки из batch json в холодном хранилище (индексы хранить в Elastic search, данные в S3 раскидать по папкам "месяц" или "день"), S3 kafka sink, репликация minio, distributed режим minio (репликация внутри кластера) и bucket replication (репликация между кластерами), тэгирование S3 (не поможет для быстрого поиска в архиве), объём S3 1450 TB
 
-API Gateway, rate limiting, circuit breaker, throughput, кросс-функциональности, вендоры API Gateway
+API Gateway, rate limiting vs throughput, circuit breaker (на уровне istio или микросервиса), tls termination, кросс-функциональности, обогощение заголовков, вендоры API Gateway
 
-Сетевые протоколы, SSE, переподключение SSE, http/2, http/3, gRPC
+Сетевые протоколы, SSE, переподключение SSE, http/2, http/3 (поверх QUIC UDP а не TCP), gRPC, http/1 (после tls termination на ingress контроллере в бэк-сервис приходит http/1), spring boot (tomcat не подходит для gRPC, jetty подходит)
 
 Наблюдаемость, мониторинг, scrape, варианты вычитывания метрик прометеусом, графана promql запросы, поллинг прометеуса
 
