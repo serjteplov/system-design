@@ -1,5 +1,5 @@
 
-Шарды, шардирование для write, доступ к шардам из приложений, решардинг, ключ шардирования, шарды mongo vs cassandra, replica set, mongos, кросс шардовые запросы, replica set по всем цодам, запросы на чтение, репликация данных между primary шардами, CDC, upsert, oplog mongo, index
+Шарды, шардирование для write, доступ к шардам из приложений, решардинг, ключ шардирования, шарды mongo vs cassandra, replica set, mongos, кросс шардовые запросы, replica set по всем цодам, запросы на чтение, репликация данных между primary шардами, CDC, upsert, oplog mongo, index, отдельный сегмент сети для данных
 
 RTO, RPO, graceful degradation(отказ search-service, отказ SSE, отказ монго), backup, защита от шифровальщиков (air-gap бэкапы, immutable хранилища бэкапов)
 
@@ -25,7 +25,7 @@ Kubernetes, worker ноды, ingress, service discovery, balancing, secret, хр
 
 Консистентность, время актуализации, время архивирования
 
-CI/CD, кэширование, Kafka, API-дизайн
+CI/CD (отдельный сегмент сети), кэширование, Kafka, API-дизайн
 
 
 Какие участники OAuth 2.0
