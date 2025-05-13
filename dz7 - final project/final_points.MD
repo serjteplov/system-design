@@ -11,7 +11,7 @@ API Gateway, rate limiting vs throughput, circuit breaker (на уровне ist
 
 Наблюдаемость, мониторинг, scrape, варианты вычитывания метрик прометеусом, push не поддерживается прометеусом, pushgateway для batch-job, графана promql запросы, поллинг прометеуса
 
-Безопасность, шифрование, tls, mtls, OIDC (OAuth2.0 с ID тоеном в формате JWT), Keycloak, проверка токена на лету, отзыв токена, межсервисная аутентификация (mTLS через Istio, OAuth2.0 machine-to-machine), плагин с merge логикой вставки в LDAP в случае конкурентных обновлений из цодов, LDAP master, LDAP failover, LDAP с ручным failover через ETCD, keycloak google span кэш
+Безопасность, шифрование, tls, mtls, OIDC (OAuth2.0 с ID тоеном в формате JWT), Keycloak, проверка токена на лету, отзыв токена, межсервисная аутентификация (mTLS через Istio, OAuth2.0 machine-to-machine), плагин с merge логикой вставки в LDAP в случае конкурентных обновлений из цодов, LDAP master, LDAP failover, LDAP с ручным failover через ETCD, keycloak и google spanner 
 
 Дедупликация (по хэшу запроса, по requestId сгенерированным клиентом), идемпотентность (идемпотентный консюмер, ключ идемпотентности в БД)
 
