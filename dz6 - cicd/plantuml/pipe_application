@@ -1,0 +1,26 @@
+@startuml
+skinparam shadowing false
+title CI/CD Pipeline: Сборка и деплой приложения
+
+actor Developer as dev
+rectangle GitLab_CI {
+
+  [Checkout кода] as checkout
+  [Сборка приложения (build)] as build_app
+  [Юнит-тесты] as unit_tests
+  [Сборка Docker-образа] as docker_build
+  [Отправка образа в Docker Registry] as docker_push
+  [Обновление Kubernetes ресурсов] as kubectl_apply
+  [Интеграционные тесты] as integration_tests
+  
+}
+
+dev --> checkout : git push в app-репозиторий
+checkout --> build_app
+build_app --> unit_tests
+unit_tests --> docker_build : тесты успешны
+docker_build --> docker_push
+docker_push --> kubectl_apply
+kubectl_apply --> integration_tests : успешный деплой
+
+@enduml
