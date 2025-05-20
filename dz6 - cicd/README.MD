@@ -211,6 +211,7 @@ spec:
 # 4. CI/CD-пайплайн
 Пайплайн для раскатки инфраструктуры на серверах под управлением OpenStack
 ![Инфра](https://github.com/serjteplov/system-design/blob/3c5081f1fe7e6761f895bb41a9d8681986278f87/dz6%20-%20cicd/pipeline_infra.png)
+
 Пайплайн для раскатки приложения в Kubernetes
 ![App](https://github.com/serjteplov/system-design/blob/3c5081f1fe7e6761f895bb41a9d8681986278f87/dz6%20-%20cicd/pipeline_application.png)
 
