@@ -1,0 +1,22 @@
+@startuml
+skinparam shadowing false
+title CI/CD Pipeline: Создание и конфигурация инфраструктуры
+
+actor Developer as dev
+rectangle GitLab_CI {
+  
+  [Инициализация Terraform] as init_tf
+  [Terraform Plan (проверка изменений)] as plan_tf
+  [Manual Approval] as approve_tf #Orange
+  [Terraform Apply (создание инфраструктуры)] as apply_tf
+  [Запуск Ansible (конфигурация)] as ansible_run
+  
+}
+
+dev --> init_tf : git push в infra-репозиторий
+init_tf --> plan_tf
+plan_tf --> approve_tf : ожидание подтверждения
+approve_tf --> apply_tf : подтверждено
+apply_tf --> ansible_run
+
+@enduml
