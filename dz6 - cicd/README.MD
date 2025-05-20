@@ -134,6 +134,7 @@ EXPOSE 8080
 
 CMD ["/go-crudl-service"]
 ```
+```
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -163,6 +164,7 @@ spec:
             memory: "128Mi"
             cpu: "250m"
 ```
+```
 apiVersion: v1
 kind: Service
 metadata:
@@ -175,6 +177,7 @@ spec:
       port: 80
       targetPort: 8080
   type: ClusterIP
+```
 ```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
