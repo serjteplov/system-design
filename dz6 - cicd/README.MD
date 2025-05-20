@@ -10,9 +10,8 @@
 - И последний шаг, создадим пайплайны в Gitlab. Первый пайплайн - запуск скриптов Terraform, последующий запуск плэйбуков Ansible. Второй пайплайн - сборка приложения, билд докер образа, установка/обновление ресурсов в кубернетес, запуск тестов.
 
 # 1. Создание инфраструктуры
-Пример tf скрипта для поднятия Postgres
+Пример tf скрипта для поднятия Postgres и Patroni
 ```
-# Настройка провайдера OpenStack
 provider "openstack" {
   auth_url    = "https://keystone.example.com:5000/v3"
   user_name   = "admin"
@@ -20,11 +19,10 @@ provider "openstack" {
   tenant_name = "admin"
 }
 
-# Создаем 3 ВМ для кластера Patroni (кворум из 3 нод)
-resource "openstack_compute_instance_v2" "patroni" {
+resource "openstack_compute_instance_v2" "db_node" {
   count       = 3
-  name        = "patroni-${count.index}"
-  image_name  = "Ubuntu-22.04"  # Базовый образ без PostgreSQL
+  name        = "db-node-${count.index}"
+  image_name  = "Ubuntu-22.04"
   flavor_name = "m1.medium"
   key_pair    = "ssh-key"
 
@@ -32,126 +30,182 @@ resource "openstack_compute_instance_v2" "patroni" {
     name = "private_network"
   }
 
-  # Отдельный диск для данных PostgreSQL
-  block_device {
-    boot_index            = 0
-    delete_on_termination = true
-    destination_type      = "volume"
-    source_type           = "image"
-    volume_size           = 20  # GB
-  }
-
-  # Теги для Ansible
-  metadata = {
-    role = "patroni"
-  }
+  # Установка PostgreSQL и Patroni через cloud-init
+  user_data = <<-EOF
+    #cloud-config
+    packages:
+      - postgresql-14
+      - postgresql-14-patroni
+      - python3-pip
+      - etcd
+    runcmd:
+      - pip3 install patroni[etcd]==2.1.2
+      - systemctl enable etcd
+      - systemctl start etcd
+    EOF
 }
 
-# Security Group для Patroni и PostgreSQL
-resource "openstack_networking_secgroup_v2" "patroni_sg" {
-  name        = "patroni-sg"
-  description = "Allow Patroni and PostgreSQL traffic"
+resource "openstack_networking_secgroup_v2" "db_secgroup" {
+  name        = "db-secgroup"
+  description = "PostgreSQL and Patroni security group"
 }
 
-# Правила доступа
-resource "openstack_networking_secgroup_rule_v2" "patroni_rules" {
-  for_each = {
-    ssh     = { port = 22 }
-    postgres = { port = 5432 }
-    patroni = { port = 8008 }  # REST API Patroni
-    etcd    = { port = 2379 }  # Если etcd на тех же нодах
-  }
-
+resource "openstack_networking_secgroup_rule_v2" "db_rules" {
+  for_each = toset(["5432", "8008", "2379", "2380"])
+  security_group_id = openstack_networking_secgroup_v2.db_secgroup.id
   direction         = "ingress"
-  ethertype         = "IPv4"
   protocol          = "tcp"
-  port_range_min    = each.value.port
-  port_range_max    = each.value.port
+  port_range_min    = each.key
+  port_range_max    = each.key
   remote_ip_prefix = "10.0.0.0/24"
-  security_group_id = openstack_networking_secgroup_v2.patroni_sg.id
 }
 
-# Выводим IP-адреса нод
-output "patroni_ips" {
-  value = openstack_compute_instance_v2.patroni[*].access_ip_v4
+output "db_nodes_ips" {
+  value = openstack_compute_instance_v2.db_node[*].access_ip_v4
 }
 ```
 # 2. Настройка конфигураций
+Настройка Postgres и репликации на Patroni
 ```
 ---
-- name: Configure Patroni cluster
-  hosts: patroni_servers
+- name: Configure PostgreSQL and Patroni
+  hosts: all
   become: yes
   vars:
-    patroni_version: "3.0.1"
+    cluster_name: "postgres-cluster"
+    etcd_hosts: "db-node-0:2379,db-node-1:2379,db-node-2:2379"
     postgres_version: "14"
-    cluster_name: "my-postgres-cluster"
-    etcd_hosts: "patroni-0:2379,patroni-1:2379,patroni-2:2379"  # etcd на тех же нодах
 
   tasks:
-    # Установка зависимостей
-    - name: Install required packages
-      ansible.builtin.apt:
-        name:
-          - python3-pip
-          - postgresql-{{ postgres_version }}
-          - postgresql-client-{{ postgres_version }}
-          - postgresql-server-dev-{{ postgres_version }}
-          - etcd  # Для координации кластера
-        update_cache: yes
-
-    # Установка Patroni
-    - name: Install Patroni via pip
-      ansible.builtin.pip:
-        name:
-          - patroni[etcd]=={{ patroni_version }}
-
-    # Конфигурация etcd
     - name: Configure etcd
-      ansible.builtin.template:
-        src: templates/etcd.conf.j2
+      template:
+        src: etcd.conf.j2
         dest: /etc/default/etcd
-      notify: Restart etcd
+      notify: restart etcd
 
-    # Конфигурация Patroni
-    - name: Create Patroni config
-      ansible.builtin.template:
-        src: templates/patroni.yml.j2
+    - name: Create Patroni configuration
+      template:
+        src: patroni.yml.j2
         dest: /etc/patroni/patroni.yml
         owner: postgres
         group: postgres
         mode: 0600
 
-    # Systemd unit для Patroni
     - name: Configure Patroni service
-      ansible.builtin.template:
-        src: templates/patroni.service.j2
+      template:
+        src: patroni.service.j2
         dest: /etc/systemd/system/patroni.service
-      notify: Reload systemd
+      notify: reload systemd
 
-    # Запуск сервисов
-    - name: Ensure etcd is running
-      ansible.builtin.systemd:
-        name: etcd
+    - name: Ensure services are running
+      systemd:
+        name: "{{ item }}"
         state: started
         enabled: yes
-
-    - name: Ensure Patroni is running
-      ansible.builtin.systemd:
-        name: patroni
-        state: started
-        enabled: yes
+      loop:
+        - etcd
+        - patroni
 
   handlers:
-    - name: Restart etcd
-      ansible.builtin.systemd:
+    - name: restart etcd
+      systemd:
         name: etcd
         state: restarted
 
-    - name: Reload systemd
-      ansible.builtin.systemd:
+    - name: reload systemd
+      systemd:
         daemon_reload: yes
 ```
+# 3. Контейнеризация приложения
+```
+FROM golang:1.21-alpine
+
+WORKDIR /app
+
+COPY go.mod ./
+RUN go mod init go-crudl-service
+RUN go get github.com/gin-gonic/gin
+
+COPY main.go ./
+
+RUN go build -o /go-crudl-service
+
+EXPOSE 8080
+
+CMD ["/go-crudl-service"]
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-crudl-deployment
+  labels:
+    app: go-crudl
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: go-crudl
+  template:
+    metadata:
+      labels:
+        app: go-crudl
+    spec:
+      containers:
+      - name: go-crudl
+        image: go-crudl-service:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-crudl-service
+spec:
+  selector:
+    app: go-crudl
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: ClusterIP
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /go-crudl(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: go-crudl-service
+            port:
+              number: 80
+      - path: /kotlin-worker(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: kotlin-worker-service
+            port:
+              number: 80
+```
+# 4. CI/CD-пайплайн
+
+# 5. Мониторинг и отчёты
+
+
 
 
 
