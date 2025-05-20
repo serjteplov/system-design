@@ -65,7 +65,7 @@ output "db_nodes_ips" {
 }
 ```
 # 2. Настройка конфигураций
-Настройка Postgres и репликации на Patroni
+Пример плэйбука на Ansible по настройке Postgres и репликации на Patroni
 ```
 ---
 - name: Configure PostgreSQL and Patroni
