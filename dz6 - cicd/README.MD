@@ -117,6 +117,7 @@ output "db_nodes_ips" {
         daemon_reload: yes
 ```
 # 3. Контейнеризация приложения
+Пример Dockerfile для демо-приложения CRUD, написанного на Go
 ```
 FROM golang:1.21-alpine
 
@@ -134,6 +135,7 @@ EXPOSE 8080
 
 CMD ["/go-crudl-service"]
 ```
+Deployment manifest
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -164,6 +166,7 @@ spec:
             memory: "128Mi"
             cpu: "250m"
 ```
+Service manifest
 ```
 apiVersion: v1
 kind: Service
@@ -178,6 +181,7 @@ spec:
       targetPort: 8080
   type: ClusterIP
 ```
+Ingress controller
 ```
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -205,6 +209,11 @@ spec:
               number: 80
 ```
 # 4. CI/CD-пайплайн
+Пайплайн для раскатки инфраструктуры на серверах под управлением OpenStack
+![Инфра](https://github.com/serjteplov/system-design/blob/3c5081f1fe7e6761f895bb41a9d8681986278f87/dz6%20-%20cicd/pipeline_infra.png)
+Пайплайн для раскатки приложения в Kubernetes
+![App](https://github.com/serjteplov/system-design/blob/3c5081f1fe7e6761f895bb41a9d8681986278f87/dz6%20-%20cicd/pipeline_application.png)
+
 
 # 5. Мониторинг и отчёты
 
