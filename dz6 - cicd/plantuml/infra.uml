@@ -1,0 +1,72 @@
+@startuml
+skinparam componentStyle rectangle
+
+title Архитектура инфраструктуры (Terraform + Ansible + Kubernetes)
+
+cloud "OpenStack (собственное железо)" as openstack {
+
+  frame "VPC (виртуальное приватное облако)" as vpc {
+    
+    rectangle "Security Groups\n(межсетевые политики)" as sg
+    
+    node "Подсеть инфраструктуры" as subnet_infra {
+      component [PostgreSQL] as postgres
+      component [Kafka] as kafka
+      component [Redis] as redis
+      component [Minio] as minio
+      component [Elasticsearch] as elastic
+    }
+    
+    node "Подсеть Kubernetes" as subnet_k8s {
+      rectangle "Kubernetes Cluster\n(kubeadm, containerd)" as k8s_cluster {
+        
+        node "Master Node" as master {
+          component [API Server] as api
+          component [Scheduler] as scheduler
+          component [Controller Manager] as controller
+        }
+        
+        node "Worker Node" as worker {
+          component [kubelet] as kubelet
+          component [kube-proxy] as kubeproxy
+          component [Containerd] as containerd
+          
+          component [Deployment\n(Приложение)] as deployment
+          component [Service] as service
+        }
+
+        component [Ingress] as ingress
+      }
+    }
+  }
+}
+
+' Связи и взаимодействия
+deployment --> service
+service --> ingress
+ingress --> sg
+
+' Security groups применяются ко всем сервисам
+sg -[dashed]-> postgres
+sg -[dashed]-> kafka
+sg -[dashed]-> redis
+sg -[dashed]-> minio
+sg -[dashed]-> elastic
+sg -[dashed]-> api
+sg -[dashed]-> scheduler
+sg -[dashed]-> controller
+sg -[dashed]-> kubelet
+sg -[dashed]-> kubeproxy
+sg -[dashed]-> containerd
+sg -[dashed]-> ingress
+
+' Подписи технологий
+note right of subnet_infra
+Создание: Terraform\nНастройка: Ansible
+end note
+
+note right of k8s_cluster
+Создание узлов: Terraform\nКонфигурация узлов: Ansible\nУправление приложениями: Kubernetes
+end note
+
+@enduml
